@@ -6,16 +6,9 @@ from django.forms import ModelForm, Form
 from apps.models import todo_lists, Cars, Wallet, User
 
 
-class TododelView(ModelForm):
-    class Meta:
-        model = todo_lists  # ✅ Vergul olib tashlandi
-        fields = ['title']
 
 
-class CarsForm(ModelForm):
-    class Meta:
-        model = Cars
-        fields = ['name', 'price', 'speed', 'km']
+
 
 
 class RegisterModelForm(ModelForm):
@@ -35,33 +28,10 @@ class RegisterModelForm(ModelForm):
         return phone_number
 
 
-class WalletForm(ModelForm):
-    class Meta:
-        model = Wallet
-        fields = 'amount', 'category', 'description'
-
-    def clean_amount(self):
-        amount = self.cleaned_data.get('amount')
-        return amount.strip('$')
-
-
 class UserForm(Form):
     class Meta:
         model = User
         fields = 'email', 'password'
 
 
-class HomeForm(ModelForm):
-    class Meta:
-        model = User
-        fields = 'email', 'password'
 
-
-class SahifaForm(ModelForm):
-    class Meta:
-        model = User
-        fields = 'email', 'password'
-    # def is_authenticated(self):
-    #     email = self.cleaned_data.get('email')
-    #     password = self.cleaned_data.get('password')
-    #     user = User.objects.filter(email=email)

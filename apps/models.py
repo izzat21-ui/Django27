@@ -6,101 +6,6 @@ from django.db.models.fields import EmailField, BooleanField, DateTimeField
 from apps.error_messages import name_card, price_car, speed_car, km_car, number_user
 
 
-class Course(Model):
-    main_image = ImageField(upload_to='images/courses/')
-    title = CharField(max_length=255)
-    author = CharField(max_length=255)
-    review_count = IntegerField(default=0)
-    price = DecimalField(max_digits=10, decimal_places=2)
-    description = TextField()
-    video = FileField(upload_to='videos/courses/', default='1')
-
-    # category = ForeignKey('apps.Category', on_delete=CASCADE, related_name='courses')
-
-    def __str__(self):
-        return self.title
-
-
-@property
-def avg_rating(self):
-    ratings = list(map(lambda x: x[0], self.course_ratings.values_list('rating')))
-    avg = 0
-    if ratings:
-        avg = sum(ratings) / len(ratings)
-    return round(avg, 1)
-
-
-# class Category(Model):
-#
-#     class Meta:
-#         verbose_name_plural = "Categories"
-#
-#     image = ImageField(upload_to='images/categories/')
-#     name = CharField(max_length=255)
-#
-#     def __str__(self):
-#         return self.name
-
-
-class CourseRating(Model):
-    class RatingType(IntegerChoices):
-        ONE = 1, "1"
-        TWO = 2, "2"
-        THREE = 3, "3"
-        FOUR = 4, "4"
-        FIVE = 5, "5"
-
-    course = ForeignKey('apps.Course', on_delete=CASCADE, related_name='course_ratings')
-    rating = IntegerField(choices=RatingType.choices)
-    user = ForeignKey('apps.User', on_delete=CASCADE, related_name='course_ratings')
-
-    def __str__(self):
-        return self.rating
-
-
-class Film(Model):
-    title = CharField(max_length=255)
-    video = FileField(upload_to='videos/films/', default='1')
-    main_image = ImageField(upload_to='images/films/')
-    duration = CharField(max_length=255)
-
-    def __str__(self):
-        return self.title
-
-
-class todo_lists(Model):
-    title = CharField(max_length=255)
-
-
-class Region(Model):
-    name = CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-
-
-class District(Model):
-    name = CharField(max_length=255)
-    region = ForeignKey('apps.Region', CASCADE, related_name='districts')
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if self.__class__.objects.count():
-            self.pk = self.__class__.objects.first().pk
-        super().save(*args, **kwargs)
-
-
-class Cars(Model):
-    class Meta:
-        verbose_name_plural = "Cars"
-
-    name = CharField(max_length=55, error_messages=name_card)
-    price = DecimalField(max_digits=10, decimal_places=2, error_messages=price_car)
-    speed = DecimalField(max_digits=10, decimal_places=2, error_messages=speed_car)  #
-    km = DecimalField(max_digits=10, decimal_places=2, error_messages=km_car)
-
 
 class CustomUserManager(UserManager):
     def _create_user(self, email, password, **extra_fields):
@@ -138,23 +43,7 @@ class User(AbstractUser):
     is_active = BooleanField(default=False)
 
 
-class Category(Model):
-    class Type(TextChoices):
-        INCOME = 'income', 'Income'
-        EXPENSE = 'expense', 'Expense'
 
-    name = CharField(max_length=255)
-    icon = CharField(max_length=255)
-    type = CharField(max_length=255, choices=Type)
-
-
-class Wallet(Model):
-    amount = DecimalField(max_digits=10, decimal_places=2)
-    category = ForeignKey('apps.Category', CASCADE, related_name='wallets')
-    description = TextField()
-    type = CharField(max_length=55, choices=Category.Type)
-    wallet_ad = DateTimeField(auto_now_add=True)
-    user = ForeignKey('apps.User', CASCADE, related_name='wallets')
 
 
 class Transaction(Model):
